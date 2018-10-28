@@ -3,22 +3,26 @@
 var searches = ["cats", "dogs", "reaction", "simpsons", "southpark", "patriots"];
 
 // a loop for displaying the buttons from the array - note, cannot get this to work 
-    for (i = 0; i < searches.length; i++){
-        var gifButton = $("<button>");
+// using basis from the movie app exercise 10, earlier i had errors about the API call not working, 
+// now i get nothing when i click. very confused on my part. 
+// function displaygifsearch(){    
 
-        gifButton.addClass("gif-button")
+for (i = 0; i < searches.length; i++){
+        var gifButton = $("<button>");
+                // used the "btn" class, but not sure this is right
+        gifButton.addClass("btn")
         gifButton.attr("data-name", searches[i]);
         
         gifButton.text(searches[i]);
-        $("#buttonWrapper").append(gifButton)
+        $("#button").append(gifButton)
     };
         
     
-    // calling the function for clicked button,  from the giphy api 
+    // calling the function for clicked button,  from the giphy api
+    // tried setting up console.log but not getting results from that either  
     
-    $(document).on("click", ".btn", function(){
-        console.log($(this).attr("title"))
-        var title = $(this).attr("title");
+    $("#btn").on("click", function(){
+        
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         title + "api_key=ATh14ooPXsdj1L5HpiCIoiG8hDTU5UVy&limit=10";
         
@@ -29,6 +33,7 @@ var searches = ["cats", "dogs", "reaction", "simpsons", "southpark", "patriots"]
             .then(function(response) {
               var results = response.data;
       
+              // using a for loop to limit gif's response to 10, 
               for (var i = 0; i < results.length; i++) {
                 var gifDiv = $("<div>");
       
@@ -43,14 +48,22 @@ var searches = ["cats", "dogs", "reaction", "simpsons", "southpark", "patriots"]
                 gifDiv.prepend(personImage);
       
                 $("#gifWrapper").prepend(gifDiv);
+
+                // if statement to limit displays to 
+                // if (rating === "R"); 
+                //     then ...
+                console.log(click)
               }
             });
     })
+    // at this point i am panicing and tried to copy/paste code in from other exercises
+    // i have yet to make the initial gif show up, this was not my best effort.  
+
 
 $("button").on("click", function() {
-    var person = $(this).attr("data-person");
+    var searchgif = $(this).attr("data-searchgif");
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-      person + "api_key=ATh14ooPXsdj1L5HpiCIoiG8hDTU5UVy&limit=10";
+      searchgif + "api_key=ATh14ooPXsdj1L5HpiCIoiG8hDTU5UVy&limit=10";
 
     $.ajax({
       url: queryURL,
@@ -58,19 +71,18 @@ $("button").on("click", function() {
     })
       .then(function(response) {
         var results = response.data;
-
         for (var i = 0; i < results.length; i++) {
           var gifDiv = $("<div>");
 
           var rating = results[i].rating;
 
-          var p = $("<p>").text("Rating: " + rating);
+          var gifadd = $("<p>").text("rating: " + rating);
 
-          var personImage = $("<img>");
-          personImage.attr("src", results[i].images.fixed_height.url);
+          var gifImage = $("<img>");
+          gifImage.attr("src", results[i].images.fixed_height.url);
 
-          gifDiv.prepend(p);
-          gifDiv.prepend(personImage);
+          gifDiv.prepend(gifadd);
+          
 
           $("#gifs-appear-here").prepend(gifDiv);
         }
