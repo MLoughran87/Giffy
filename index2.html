@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Gifs</title>
+  <style type="text/css">
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Gif Search</h1>
+
+    <!-- Rendered Buttons will get Dumped Here  -->
+    <div id="buttons-view"></div>
+
+    <form id="gif-form">
+      <label for="gif-input">Add a Gif</label>
+      <input type="text" id="gif-input">
+      <br>
+
+      <!-- Button triggers new movie to be added -->
+      <input id="add-gif" type="submit" value="Add a Gif!">
+    </form>
+
+    <!-- Movies will Get Dumped Here -->
+    <div id="gif-view"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      // Initial array of movies
+      var gifs = ["Cats", "Doggos", "Tom Brady", "Bill Bilicheck"];
+
+      // displayMovieInfo function re-renders the HTML to display the appropriate content
+      function displayGifInfo() {
+
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        title + "api_key=ATh14ooPXsdj1L5HpiCIoiG8hDTU5UVy&limit=10";
+
+        // Creating an AJAX call for the specific movie button being clicked
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+
+          // Creating a div to hold the Gif
+          var gifDiv = $("<div class='Gifs'>");
+
+          // Storing the rating data
+          var rating = response.Rated;
+
+          // Creating an element to have the rating displayed
+          var pOne = $("<p>").text("rating: " + rating);
+
+          // Displaying the rating
+          gifsDiv.append(pOne);
+
+          // Storing the release year
+           // var released = response.Released;
+
+          // Creating an element to hold the release year
+          // var pTwo = $("<p>").text("Released: " + released);
+
+          // Displaying the release year
+          //gifsDiv.append(pTwo);
+
+          // Storing the plot
+          //var plot = response.Plot;
+
+          // Creating an element to hold the plot
+          //var pThree = $("<p>").text("Plot: " + plot);
+
+          // Appending the plot
+          //gifsDiv.append(pThree);
+
+          // Retrieving the URL for the image
+          var imgURL = response.Poster;
+
+          // Creating an element to hold the image
+          var image = $("<img>").attr("src", imgURL);
+
+          // Appending the image
+          gifsDiv.append(image);
+
+          // Putting the entire movie above the previous movies
+          $("#gifs-view").prepend(gifsDiv);
+        });
+
+      }
+
+      // Function for displaying movie data
+      function renderButtons() {
+
+        // Deleting the movies prior to adding new movies
+        // (this is necessary otherwise you will have repeat buttons)
+        $("#buttons-view").empty();
+
+        // Looping through the array of movies
+        for (var i = 0; i < gifs.length; i++) {
+
+          // Then dynamicaly generating buttons for each movie in the array
+          // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+          var a = $("<button>");
+          // Adding a class of movie-btn to our button
+          a.addClass("gifs-btn");
+          // Adding a data-attribute
+          a.attr("data-name", gifs[i]);
+          // Providing the initial button text
+          a.text(gifs[i]);
+          // Adding the button to the buttons-view div
+          $("#buttons-view").append(a);
+        }
+      }
+
+      // This function handles events where a movie button is clicked
+      $("#add-gif").on("click", function(event) {
+        event.preventDefault();
+        // This line grabs the input from the textbox
+        var gif = $("#gif-input").val().trim();
+
+        // Adding movie from the textbox to our array
+        gifs.push(gif);
+
+        // Calling renderButtons which handles the processing of our movie array
+        renderButtons();
+      });
+
+      // Adding a click event listener to all elements with a class of "movie-btn"
+      $(document).on("click", ".gif-btn", displayGifInfo);
+
+      // Calling the renderButtons function to display the intial buttons
+      renderButtons();
+    </script>
+  </div>
+</body>
+
+</html>
